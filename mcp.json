@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "hono-mcp-worker": {
+      "type": "http",
+      "url": "https://hono-mcp-worker.abbaspour.workers.dev/mcp",
+      "protocolEra": "legacy"
+    }
+  }
+}

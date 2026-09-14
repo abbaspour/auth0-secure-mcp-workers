@@ -1,0 +1,10 @@
+.idea
+.wrangler
+.claude
+node_modules
+dist
+package-lock.json
+.terraform*
+terraform.auto.tfvars
+terraform.tfstate
+*.plan

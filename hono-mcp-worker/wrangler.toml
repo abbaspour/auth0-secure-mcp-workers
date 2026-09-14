@@ -1,0 +1,12 @@
+name = "hono-mcp-worker"
+main = "src/index.ts"
+compatibility_date = "2026-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+[observability]
+enabled = true
+
+[vars]
+AUTH0_DOMAIN = "abbaspour.auth0.com"
+AUTH0_AUDIENCE = "https://hono-mcp-worker.abbaspour.workers.dev/"
+MCP_SERVER_URL = "https://hono-mcp-worker.abbaspour.workers.dev"
