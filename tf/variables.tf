@@ -13,4 +13,3 @@ variable "auth0_tf_client_secret" {
   type        = string
   sensitive   = true
 }
-

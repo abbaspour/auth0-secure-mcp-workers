@@ -1,10 +1,11 @@
-# Auth0 secured MCP servers Deployed in Cloudflare Workers
+# Auth0 secured MCP servers deployed in Cloudflare Workers
 
 Capabilities
-- CIMD
-- Auth for MCP
-- On-behalf-of (OBO) token exchange
+- [CIMD](https://auth0.com/docs/get-started/auth0-overview/create-applications/register-applications-with-cimd)
+- [Auth for MCP](https://auth0.com/ai/docs/mcp/get-started/authorization-for-your-mcp-server)
+- [On-behalf-of (OBO)](https://auth0.com/docs/secure/call-apis-on-users-behalf/on-behalf-of-token-exchange) token exchange (coming soon)
+- MCP Apps (coming soon)
 
 SDKs
-- Hono
-- agents
+- [hono](https://hono.dev/)
+- [agents](https://agents.cloudflare.com/)
