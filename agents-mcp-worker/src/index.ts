@@ -20,6 +20,21 @@ export default {
     async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
         const resourceServerUrl = new URL(env.MCP_SERVER_URL);
 
+        if (request.method === "GET" && new URL(request.url).pathname === "/client-metadata.json") {
+            return Response.json({
+                client_id: `${env.MCP_SERVER_URL}/client-metadata.json`,
+                client_name: "Agents MCP Server",
+                redirect_uris: [
+                    "https://agents-mcp-worker.abbaspour.workers.dev/callback",
+                    "http://localhost:3000/callback",
+                    "http://127.0.0.1:3000/callback",
+                ],
+                grant_types: ["authorization_code"],
+                response_types: ["code"],
+                token_endpoint_auth_method: "none",
+            });
+        }
+
         const metadataResponse = oauthMetadataResponse(request, {
             oauthMetadata: buildAuth0OAuthMetadata({ domain: env.AUTH0_DOMAIN }),
             resourceServerUrl,

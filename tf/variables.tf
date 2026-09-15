@@ -13,11 +13,3 @@ variable "auth0_tf_client_secret" {
   type        = string
   sensitive   = true
 }
-
-variable "agents_test_client_secret" {
-  description = "Temporary client_secret for the agents-mcp-worker test client (write-only, not persisted in state)"
-  type        = string
-  sensitive   = true
-  ephemeral   = true
-}
-

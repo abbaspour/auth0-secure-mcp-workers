@@ -19,20 +19,13 @@ resource "auth0_resource_server_scopes" "agents" {
   }
 }
 
-resource "auth0_client" "agents_test" {
-  name     = "agents mcp worker test client"
-  app_type = "non_interactive"
+resource "auth0_client_cimd" "agents" {
+  external_client_id = "https://agents-mcp-worker.abbaspour.workers.dev/client-metadata.json"
 }
 
-resource "auth0_client_grant" "agents_test" {
-  client_id = auth0_client.agents_test.client_id
-  audience  = auth0_resource_server.agents.identifier
-  scopes    = ["tool:add", "tool:calculate"]
-}
-
-resource "auth0_client_credentials" "agents_test" {
-  client_id                = auth0_client.agents_test.client_id
-  authentication_method    = "client_secret_post"
-  client_secret_wo         = var.agents_test_client_secret
-  client_secret_wo_version = 1
+resource "auth0_client_grant" "agents" {
+  default_for      = "third_party_clients"
+  audience         = auth0_resource_server.agents.identifier
+  subject_type     = "user"
+  allow_all_scopes = true
 }
