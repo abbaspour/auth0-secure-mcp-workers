@@ -4,6 +4,11 @@
       "type": "http",
       "url": "https://hono-mcp-worker.abbaspour.workers.dev/mcp",
       "protocolEra": "legacy"
+    },
+    "agents-mcp-worker": {
+      "type": "http",
+      "url": "https://agents-mcp-worker.abbaspour.workers.dev/mcp",
+      "protocolEra": "modern"
     }
   }
 }
