@@ -1,4 +1,3 @@
-
 resource "auth0_resource_server" "agents" {
   identifier = "https://agents-mcp-worker.abbaspour.workers.dev/"
   name       = "agents mcp api"

@@ -1,0 +1,41 @@
+{
+  "name": "agents-mcp-apps",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build:ui:sum": "cross-env UI_ROOT=ui/sum OUTDIR=dist-ui/sum vite build",
+    "build:ui:calculator": "cross-env UI_ROOT=ui/calculator OUTDIR=dist-ui/calculator vite build",
+    "build:ui": "npm run build:ui:sum && npm run build:ui:calculator",
+    "build": "npm run build:ui",
+    "deploy": "npm run build:ui && wrangler deploy",
+    "dev": "npm run build:ui && wrangler dev",
+    "start": "npm run build:ui && wrangler dev",
+    "cf-typegen": "wrangler types",
+    "type-check": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^0.10",
+    "@modelcontextprotocol/client": "2.0.0",
+    "@modelcontextprotocol/ext-apps": "^2.0.0",
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/server": "2.0.0",
+    "agents": "^0.23",
+    "jose": "^6.2.3",
+    "zod": "^4.4.3"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "^5.20260914.1",
+    "@types/node": "^26.5.1",
+    "cross-env": "^10.1.0",
+    "typescript": "^7",
+    "vite": "^6.0.0",
+    "vite-plugin-singlefile": "^2.3.0",
+    "wrangler": "^4.131"
+  },
+  "allowScripts": {
+    "core-js-pure": true,
+    "esbuild": true,
+    "fsevents": true,
+    "workerd": true
+  }
+}

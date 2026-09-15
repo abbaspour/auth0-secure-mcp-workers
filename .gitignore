@@ -3,6 +3,7 @@
 .claude
 node_modules
 dist
+dist-ui
 package-lock.json
 .terraform*
 terraform.auto.tfvars
