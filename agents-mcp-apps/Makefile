@@ -12,11 +12,11 @@ compile:
 	npm run type-check
 
 log:
-	wrangler tail hono-mcp-worker
+	wrangler tail agents-mcp-apps
 
 oauth-protected-resource:
-	curl -s https://agents-mcp-worker.abbaspour.workers.dev/.well-known/oauth-protected-resource | jq .
+	curl -s https://agents-mcp-apps.abbaspour.workers.dev/.well-known/oauth-protected-resource | jq .
 
 client-metadata:
-	curl -s https://agents-mcp-worker.abbaspour.workers.dev/client-metadata.json | jq .
+	curl -s https://agents-mcp-apps.abbaspour.workers.dev/client-metadata.json | jq .
 

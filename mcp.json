@@ -9,6 +9,11 @@
       "type": "http",
       "url": "https://agents-mcp-worker.abbaspour.workers.dev/mcp",
       "protocolEra": "modern"
+    },
+    "agents-mcp-apps": {
+      "type": "http",
+      "url": "https://agents-mcp-apps.abbaspour.workers.dev/mcp",
+      "protocolEra": "modern"
     }
   }
 }

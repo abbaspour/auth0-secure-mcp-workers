@@ -9,3 +9,17 @@ Capabilities
 SDKs
 - [hono](https://hono.dev/)
 - [agents](https://agents.cloudflare.com/)
+
+## Screenshots
+
+MCP Inspector list:
+![Apps list](./images/mcp-inspector-list.png)
+
+MCP Inspector Connect to Server
+![MCP Inspector connect](./images/mcp-inspector-connect.png)
+
+Auth0 Consent
+![Auth0 consent](./images/auth0-consent.png)
+
+MCP Inspector Rendered Apps
+![MCP Inspector Apps](./images/mcp-inspector-apps.png)

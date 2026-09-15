@@ -1,4 +1,4 @@
-name = "agents-mcp-worker"
+name = "agents-mcp-apps"
 main = "src/index.ts"
 compatibility_date = "2026-09-01"
 compatibility_flags = ["nodejs_compat"]
@@ -8,5 +8,5 @@ enabled = true
 
 [vars]
 AUTH0_DOMAIN = "abbaspour.auth0.com"
-AUTH0_AUDIENCE = "https://agents-mcp-worker.abbaspour.workers.dev/"
-MCP_SERVER_URL = "https://agents-mcp-worker.abbaspour.workers.dev"
+AUTH0_AUDIENCE = "https://agents-mcp-apps.abbaspour.workers.dev/"
+MCP_SERVER_URL = "https://agents-mcp-apps.abbaspour.workers.dev"

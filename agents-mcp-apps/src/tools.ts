@@ -1,7 +1,13 @@
-import { CallToolResult, McpServer, ServerContext } from "@modelcontextprotocol/server";
-import { z } from "zod";
+import {CallToolResult, McpServer, ServerContext} from "@modelcontextprotocol/server";
+import {registerAppResource, registerAppTool, RESOURCE_MIME_TYPE} from "@modelcontextprotocol/ext-apps/server";
+import {z} from "zod";
+import sumHtml from "../dist-ui/sum/mcp-app.html";
+import calculatorHtml from "../dist-ui/calculator/mcp-app.html";
 
 export const MCP_TOOL_SCOPES = ["tool:add", "tool:calculate"];
+
+const SUM_URI = "ui://sum/mcp-app.html";
+const CALCULATOR_URI = "ui://calculator/mcp-app.html";
 
 function requireScopes<Args>(
     requiredScopes: readonly string[],
@@ -23,15 +29,24 @@ function requireScopes<Args>(
 }
 
 export function registerTools(server: McpServer) {
-    server.registerTool(
+    registerAppTool(
+        server,
         "add",
-        { inputSchema: z.object({ a: z.number(), b: z.number() }) },
-        requireScopes(["tool:add"], async ({ a, b }) => ({
-            content: [{ type: "text", text: String(a + b) }],
-        })),
+        {
+            inputSchema: z.object({a: z.number(), b: z.number()}),
+            _meta: {ui: {resourceUri: SUM_URI}},
+        },
+        requireScopes(["tool:add"], async ({a, b}) => {
+            const sum = a + b;
+            return {
+                content: [{type: "text", text: String(sum)}],
+                structuredContent: {sum},
+            };
+        }),
     );
 
-    server.registerTool(
+    registerAppTool(
+        server,
         "calculate",
         {
             inputSchema: z.object({
@@ -39,8 +54,9 @@ export function registerTools(server: McpServer) {
                 a: z.number(),
                 b: z.number(),
             }),
+            _meta: {ui: {resourceUri: CALCULATOR_URI}},
         },
-        requireScopes(["tool:calculate"], async ({ operation, a, b }) => {
+        requireScopes(["tool:calculate"], async ({operation, a, b}) => {
             let result: number;
             switch (operation) {
                 case "add":
@@ -61,11 +77,49 @@ export function registerTools(server: McpServer) {
                                     text: "Error: Cannot divide by zero",
                                 },
                             ],
+                            isError: true,
                         };
                     result = a / b;
                     break;
             }
-            return { content: [{ type: "text", text: String(result) }] };
+            return {
+                content: [{type: "text", text: String(result)}],
+                structuredContent: {result},
+            };
         }),
     );
+
+    registerAppResource(server, "Sum UI", SUM_URI, {}, async () => ({
+        contents: [
+            {
+                uri: SUM_URI,
+                mimeType: RESOURCE_MIME_TYPE,
+                text: sumHtml,
+                _meta: {
+                    ui: {
+                        csp: {
+                            connectDomains: ["https://agents-mcp-apps.abbaspour.workers.dev"],
+                        }, prefersBorder: true
+                    }
+                },
+            },
+        ],
+    }));
+
+    registerAppResource(server, "Calculator UI", CALCULATOR_URI, {}, async () => ({
+        contents: [
+            {
+                uri: CALCULATOR_URI,
+                mimeType: RESOURCE_MIME_TYPE,
+                text: calculatorHtml,
+                _meta: {
+                    ui: {
+                        csp: {
+                            connectDomains: ["https://agents-mcp-apps.abbaspour.workers.dev"],
+                        }, prefersBorder: true
+                    }
+                },
+            },
+        ],
+    }));
 }

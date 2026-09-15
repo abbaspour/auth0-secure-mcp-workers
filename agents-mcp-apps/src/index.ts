@@ -5,7 +5,7 @@ import { MCP_TOOL_SCOPES, registerTools } from "./tools";
 
 function createServer() {
     const server = new McpServer({
-        name: "Agents MCP Server",
+        name: "Agents MCP Apps Server",
         version: "1.0.0",
     });
 
@@ -23,9 +23,10 @@ export default {
         if (request.method === "GET" && new URL(request.url).pathname === "/client-metadata.json") {
             return Response.json({
                 client_id: `${env.MCP_SERVER_URL}/client-metadata.json`,
-                client_name: "Agents MCP Server",
+                client_name: "Agents MCP Apps Server",
                 redirect_uris: [
-                    "https://agents-mcp-worker.abbaspour.workers.dev/callback",
+                    "https://agents-mcp-apps.abbaspour.workers.dev/callback",
+                    "http://local.abbaspour.net:1980/cgi-bin/cb.sh",
                     "http://localhost:3000/callback",
                     "http://127.0.0.1:3000/callback",
                 ],
@@ -39,7 +40,7 @@ export default {
             oauthMetadata: buildAuth0OAuthMetadata({ domain: env.AUTH0_DOMAIN }),
             resourceServerUrl,
             scopesSupported: MCP_TOOL_SCOPES,
-            resourceName: "Agents MCP Server",
+            resourceName: "Agents MCP Apps Server",
         });
         if (metadataResponse) return metadataResponse;
 
