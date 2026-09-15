@@ -1,58 +1,15 @@
-import {McpServer} from "@modelcontextprotocol/server";
-import {createMcpHandler} from "agents/mcp/server";
-import {z} from "zod";
+import { createMcpHandler } from "agents/mcp/server";
+import { McpServer, getOAuthProtectedResourceMetadataUrl, oauthMetadataResponse, requireBearerAuth } from "@modelcontextprotocol/server";
+import { buildAuth0OAuthMetadata, createAuth0TokenVerifier } from "./auth0";
+import { MCP_TOOL_SCOPES, registerTools } from "./tools";
 
 function createServer() {
     const server = new McpServer({
-        name: "Authless Calculator",
+        name: "Agents MCP Server",
         version: "1.0.0",
     });
 
-    server.registerTool(
-        "add",
-        {inputSchema: z.object({a: z.number(), b: z.number()})},
-        async ({a, b}) => ({
-            content: [{type: "text", text: String(a + b)}],
-        }),
-    );
-
-    server.registerTool(
-        "calculate",
-        {
-            inputSchema: z.object({
-                operation: z.enum(["add", "subtract", "multiply", "divide"]),
-                a: z.number(),
-                b: z.number(),
-            }),
-        },
-        async ({operation, a, b}) => {
-            let result: number;
-            switch (operation) {
-                case "add":
-                    result = a + b;
-                    break;
-                case "subtract":
-                    result = a - b;
-                    break;
-                case "multiply":
-                    result = a * b;
-                    break;
-                case "divide":
-                    if (b === 0)
-                        return {
-                            content: [
-                                {
-                                    type: "text",
-                                    text: "Error: Cannot divide by zero",
-                                },
-                            ],
-                        };
-                    result = a / b;
-                    break;
-            }
-            return {content: [{type: "text", text: String(result)}]};
-        },
-    );
+    registerTools(server);
 
     return server;
 }
@@ -60,7 +17,28 @@ function createServer() {
 const handler = createMcpHandler(createServer);
 
 export default {
-    fetch(request: Request, env: Env, ctx: ExecutionContext) {
-        return handler(request, env, ctx);
+    async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+        const resourceServerUrl = new URL(env.MCP_SERVER_URL);
+
+        const metadataResponse = oauthMetadataResponse(request, {
+            oauthMetadata: buildAuth0OAuthMetadata({ domain: env.AUTH0_DOMAIN }),
+            resourceServerUrl,
+            scopesSupported: MCP_TOOL_SCOPES,
+            resourceName: "Agents MCP Server",
+        });
+        if (metadataResponse) return metadataResponse;
+
+        if (request.method === "OPTIONS" || new URL(request.url).pathname !== "/mcp") {
+            return handler.fetch(request);
+        }
+
+        const gate = requireBearerAuth({
+            verifier: createAuth0TokenVerifier({ domain: env.AUTH0_DOMAIN, audience: env.AUTH0_AUDIENCE }),
+            resourceMetadataUrl: getOAuthProtectedResourceMetadataUrl(resourceServerUrl),
+        });
+        const authInfo = await gate(request);
+        if (authInfo instanceof Response) return authInfo;
+
+        return handler.fetch(request, { authInfo });
     },
 } satisfies ExportedHandler<Env>;
